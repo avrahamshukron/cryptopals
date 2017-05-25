@@ -44,3 +44,14 @@ class Set01Tests(unittest.TestCase):
         decrypted, key, score = max(cracked, key=lambda x: x[2])
         self.assertEqual(solution, decrypted)
         print "%s decrypted using %s with score of %s" % (decrypted, key, score)
+
+    def test_task05(self):
+        plaintext = "Burning 'em, if you ain't quick and nimble\n" \
+                    "I go crazy when I hear a cymbal"
+        expected = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c" \
+                   "2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b" \
+                   "2027630c692b20283165286326302e27282f"
+        key ="ICE"
+        result = xor_buffer(plaintext, key)
+        hexlified = binascii.hexlify(result)
+        self.assertEqual(hexlified, expected)
