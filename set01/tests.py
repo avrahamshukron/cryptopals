@@ -29,7 +29,7 @@ class Set01Tests(unittest.TestCase):
         decrypted, key, score = crack_xor_single_byte_key(
             binascii.unhexlify(encrypted))
         self.assertEqual(solution, decrypted)
-        print "%s decrypted using %s" % (decrypted, score)
+        print "%s decrypted using %s with score of %s" % (decrypted, key, score)
 
     def test_task04(self):
         # solution found by actually running the code. These madafuckers put
@@ -43,4 +43,4 @@ class Set01Tests(unittest.TestCase):
         cracked = [crack_xor_single_byte_key(line) for line in lines]
         decrypted, key, score = max(cracked, key=lambda x: x[2])
         self.assertEqual(solution, decrypted)
-        print "%s decrypted using %s" % (decrypted, score)
+        print "%s decrypted using %s with score of %s" % (decrypted, key, score)
