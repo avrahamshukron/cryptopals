@@ -6,7 +6,6 @@ import binascii
 from Crypto.Cipher import AES
 
 from set01 import core
-from set01.core import TextRecognizer
 
 
 class Set01Tests(unittest.TestCase):
