@@ -3,7 +3,10 @@ import base64
 import unittest
 import binascii
 
+from Crypto.Cipher import AES
+
 from set01 import core
+from set01.core import TextRecognizer
 
 
 class Set01Tests(unittest.TestCase):
@@ -66,15 +69,38 @@ class Set01Tests(unittest.TestCase):
         # expected_key found by running this test and printing the key
         expected_key = "Terminator X: Bring the noise"
         input_file = os.path.join(os.path.dirname(__file__), "6.txt")
-        output_file = os.path.join(os.path.dirname(__file__), "6.plain.txt")
         with open(input_file, "rb") as f:
             data = f.read()
-        as_bin = base64.b64decode(data)
-        key_len, distance = core.find_xor_key_len(as_bin, max_len=40, min_len=2)
+        ciphertext = base64.b64decode(data)
+        key_len, distance = core.find_xor_key_len(
+            ciphertext, max_len=40, min_len=2)
         print "The key is probably of %s length" % (key_len,)
-        key = core.crack_repeating_xor_key(as_bin, key_len)
+        key = core.crack_repeating_xor_key(ciphertext, key_len)
         self.assertEqual(key, expected_key)
         print "Key cracked: %s" % (key,)
-        with open(output_file, "wb") as f:
-            f.write(core.xor_buffer(as_bin, key))
-        print "File decrypted at %s" % (output_file,)
+
+    def test_task07(self):
+        input_file = os.path.join(os.path.dirname(__file__), "7.txt")
+        key = "YELLOW SUBMARINE"
+        # Trust me
+        expected_plaintext_start = "I'm back and I'm ringin' the bell"
+        cipher = AES.new(key, mode=AES.MODE_ECB)
+        with open(input_file, "rb") as f:
+            data = f.read()
+        ciphertext = base64.b64decode(data)
+        plaintext = cipher.decrypt(ciphertext)
+        self.assertTrue(plaintext.startswith(expected_plaintext_start))
+
+    def test_task08(self):
+        expected_line = 132  # Trust me
+        expected_identical_blocks = 3  # Again, trust me
+        input_file = os.path.join(os.path.dirname(__file__), "8.txt")
+        with open(input_file, "rb") as f:
+            data = f.read()
+        lines = [binascii.unhexlify(line) for line in data.splitlines()]
+        found_blocks = [core.count_identical_blocks(line, 16) for line in lines]
+        for i, num_blocks in enumerate(found_blocks):
+            self.assertEqual(
+                num_blocks,
+                0 if i != expected_line else expected_identical_blocks
+            )

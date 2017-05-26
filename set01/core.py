@@ -1,7 +1,6 @@
 import base64
 import binascii
 import itertools
-
 from cStringIO import StringIO
 
 
@@ -65,14 +64,13 @@ class TextRecognizer(object):
 
 
 def crack_single_byte_xor_key(encrypted_text):
-    grader = TextRecognizer()
     top_score = -1
     found_key = None
     decrypted = None
     for key in xrange(256):
         keystr = chr(key)
         maybe = xor_buffer(encrypted_text, keystr)
-        score = grader.grade(maybe)
+        score = TextRecognizer.grade(maybe)
         if score > top_score:
             top_score = score
             found_key = keystr
@@ -133,9 +131,9 @@ def transpose(matrix):
     return [[matrix[i][j] for i in range(n)] for j in range(m)]
 
 
-def crack_repeating_xor_key(encrypted_text, key_len):
-    chunks = [encrypted_text[i: i + key_len]
-              for i in range(0, len(encrypted_text), key_len)]
+def crack_repeating_xor_key(ciphertext, key_len):
+    chunks = [ciphertext[i: i + key_len]
+              for i in range(0, len(ciphertext), key_len)]
 
     # I only need the first `key_len` chunks to crack the key
     chunks = chunks[:key_len]
@@ -145,3 +143,9 @@ def crack_repeating_xor_key(encrypted_text, key_len):
     _, key_chars, _ = transpose(cracked)
     key = "".join(key_chars)
     return key
+
+
+def count_identical_blocks(buf, block_size):
+    chunks = [buf[i: i + block_size]
+              for i in range(0, len(buf), block_size)]
+    return len(chunks) - len(set(chunks))
