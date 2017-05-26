@@ -63,6 +63,7 @@ class TextRecognizer(object):
                 score += cls.FREQ_MAP.get(c, 0)
         return score
 
+
 def crack_single_byte_xor_key(encrypted_text):
     grader = TextRecognizer()
     top_score = -1
