@@ -83,10 +83,10 @@ class Set01Tests(unittest.TestCase):
         key = "YELLOW SUBMARINE"
         # Trust me
         expected_plaintext_start = "I'm back and I'm ringin' the bell"
-        cipher = AES.new(key, mode=AES.MODE_ECB)
         with open(input_file, "rb") as f:
             data = f.read()
         ciphertext = base64.b64decode(data)
+        cipher = AES.new(key, mode=AES.MODE_ECB)
         plaintext = cipher.decrypt(ciphertext)
         self.assertTrue(plaintext.startswith(expected_plaintext_start))
 
