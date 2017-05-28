@@ -5,7 +5,7 @@ import binascii
 
 from Crypto.Cipher import AES
 
-from set01 import core
+import core
 
 
 class Set01Tests(unittest.TestCase):

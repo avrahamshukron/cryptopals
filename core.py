@@ -2,6 +2,18 @@ import base64
 import binascii
 import itertools
 from cStringIO import StringIO
+from Crypto import Random
+
+
+PKCS7_PAD_BYTE = "\x04"  # EOT
+
+
+def pad_pkcs7(buf, size):
+    """
+    Pad `buf` with \x04 up to `size`
+    :type buf: str
+    """
+    return buf.ljust(size, PKCS7_PAD_BYTE)
 
 
 def b64_encode_hex(hex_string):
@@ -149,3 +161,7 @@ def count_identical_blocks(buf, block_size):
     chunks = [buf[i: i + block_size]
               for i in range(0, len(buf), block_size)]
     return len(chunks) - len(set(chunks))
+
+
+def generate_key(length):
+    return Random.get_random_bytes(length)
